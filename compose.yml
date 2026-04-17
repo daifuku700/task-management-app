@@ -4,13 +4,6 @@ services:
       context: ./backend
     ports:
       - "8000:8000"
-    # environment:
-    #   UV_CACHE_DIR: /root/.cache/uv
-    #   UV_PYTHON_CACHE_DIR: /root/.cache/uv/python
-    # volumes:
-    #   - ./backend:/app
-    #   - backend-venv:/app/.venv
-    #   - backend-uv-cache:/root/.cache/uv
 
   frontend:
     build:
@@ -27,5 +20,3 @@ services:
 
 volumes:
   frontend-node_modules:
-  backend-venv:
-  backend-uv-cache:
