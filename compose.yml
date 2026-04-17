@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    # environment:
+    #   UV_CACHE_DIR: /root/.cache/uv
+    #   UV_PYTHON_CACHE_DIR: /root/.cache/uv/python
+    # volumes:
+    #   - ./backend:/app
+    #   - backend-venv:/app/.venv
+    #   - backend-uv-cache:/root/.cache/uv
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - frontend-node_modules:/app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  frontend-node_modules:
+  backend-venv:
+  backend-uv-cache:

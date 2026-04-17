@@ -1,6 +1,7 @@
 import type { Task } from "../types/task";
 
-const API_BASE_URL = "http://172.21.40.22:8000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
 type CreateTaskInput = {
   title: string;

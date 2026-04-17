@@ -1,73 +1,75 @@
-# React + TypeScript + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript + Vite based frontend for the task management app.
 
-Currently, two official plugins are available:
+## Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js 24 or later
+- npm
 
-## React Compiler
+## Environment Variables
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This frontend reads the API base URL from `VITE_API_BASE_URL`.
 
-## Expanding the ESLint configuration
+Vite exposes only variables prefixed with `VITE_` to browser-side code via `import.meta.env`.
+Relevant `.env` files are:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- `.env`
+- `.env.local`
+- `.env.development`
+- `.env.production`
+- `.env.[mode].local`
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+`.env.local` and `.env.[mode].local` are suitable for local-only values and should not be committed.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Create a local env file from the example:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env.local
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Example:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_API_BASE_URL=http://localhost:8000
 ```
+
+The frontend currently uses this variable in [src/api/tasks.ts](./src/api/tasks.ts).
+
+## Run Locally
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The app is served at `http://localhost:5173`.
+
+## Available Scripts
+
+- `npm run dev`: start the Vite dev server
+- `npm run build`: build the production bundle
+- `npm run lint`: run ESLint
+- `npm run preview`: preview the production build locally
+
+## Docker Development
+
+The development container uses bind mount for source files and keeps `node_modules` in a Docker named volume.
+
+Typical command from the repository root:
+
+```bash
+docker compose up --build
+```
+
+## Notes
+
+- Restart the Vite dev server after editing `.env` files.
+- Use browser-reachable URLs for `VITE_API_BASE_URL`. For local development, `http://localhost:8000` is appropriate.
