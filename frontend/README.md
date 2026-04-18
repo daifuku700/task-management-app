@@ -73,3 +73,4 @@ docker compose up --build
 
 - Restart the Vite dev server after editing `.env` files.
 - Use browser-reachable URLs for `VITE_API_BASE_URL`. For local development, `http://localhost:8000` is appropriate.
+- For EC2, set `VITE_API_BASE_URL` to `http://<EC2_PUBLIC_IP>:8000`.

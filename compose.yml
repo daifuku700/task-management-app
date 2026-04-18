@@ -4,6 +4,8 @@ services:
       context: ./backend
     ports:
       - "8000:8000"
+    environment:
+      FRONTEND_ORIGINS: http://localhost:5173
 
   frontend:
     build:

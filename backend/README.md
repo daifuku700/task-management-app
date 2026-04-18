@@ -30,6 +30,28 @@ The API is available at `http://localhost:8000`.
 - `PUT /tasks/{task_id}`
 - `DELETE /tasks/{task_id}`
 
+## CORS
+
+The backend reads allowed frontend origins from `FRONTEND_ORIGINS`.
+
+Example for local development:
+
+```bash
+FRONTEND_ORIGINS=http://localhost:5173
+```
+
+Example for EC2:
+
+```bash
+FRONTEND_ORIGINS=http://<EC2_PUBLIC_IP>:5173
+```
+
+Multiple origins can be passed as a comma-separated list:
+
+```bash
+FRONTEND_ORIGINS=http://localhost:5173,http://<EC2_PUBLIC_IP>:5173
+```
+
 ## Docker
 
 There are two useful Docker directions:
