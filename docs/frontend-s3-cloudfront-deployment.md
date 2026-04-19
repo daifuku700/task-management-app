@@ -60,10 +60,18 @@ fetch(`${API_BASE_URL}/tasks`)
 
 `frontend/` 配下に production 用の env ファイルを作ります。
 
-例:
+初期の例:
 
 ```env
 VITE_API_BASE_URL=http://<ALB_DNS>
+```
+
+最終的には、HTTPS 化した独自ドメインへ向ける形に寄せるのが自然です。
+
+例:
+
+```env
+VITE_API_BASE_URL=https://task-app-api.daifukunaga.com
 ```
 
 ポイント:
@@ -249,7 +257,29 @@ https://<CLOUDFRONT_DOMAIN>
 https://<CLOUDFRONT_DOMAIN>
 ```
 
-もし将来独自ドメインを使うなら、その origin に合わせて更新します。
+今回の学習では、CloudFront からの frontend 表示後に backend との通信で Mixed Content が発生しました。
+
+原因:
+
+- frontend は `https://<CLOUDFRONT_DOMAIN>`
+- backend API は `http://<ALB_DNS>`
+
+となっており、HTTPS ページから HTTP API を呼んでいたためです。
+
+これを解消するために:
+
+- Cloudflare 管理ドメインを使って backend 用独自ドメインを用意
+- ACM で証明書を発行
+- ALB に HTTPS listener を設定
+- frontend の `VITE_API_BASE_URL` を HTTPS 独自ドメインへ変更
+
+という流れを取りました。
+
+例:
+
+```env
+VITE_API_BASE_URL=https://task-app-api.daifukunaga.com
+```
 
 ## 12. CORS の注意
 
@@ -273,7 +303,54 @@ https://<CLOUDFRONT_DOMAIN>
 
 ここを更新しないと、frontend は表示されても API 通信だけ失敗します。
 
-## 13. 今後の理想形
+今回の学習では、backend 側で次のような origin を許可する必要がありました。
+
+例:
+
+```text
+https://db85u4bub8d6f.cloudfront.net
+```
+
+つまり:
+
+- frontend がどの origin で配信されているか
+- backend がどの origin を CORS で許可しているか
+
+を一致させる必要があります。
+
+## 13. 独自ドメインと HTTPS の補足
+
+Cloudflare の独自ドメインを使って backend API を HTTPS 化できます。
+
+今回の流れ:
+
+1. Cloudflare の DNS で `task-app-api.daifukunaga.com` を ALB に向ける
+2. ACM で `task-app-api.daifukunaga.com` の証明書を発行する
+3. ALB に `HTTPS:443` listener を追加する
+4. `HTTP:80` を `HTTPS:443` にリダイレクトする
+5. frontend の API URL を `https://task-app-api.daifukunaga.com` に変更する
+
+この構成にすると:
+
+- Mixed Content を回避できる
+- browser から見て自然な API URL になる
+- 本番に近い構成になる
+
+## 14. 反映手順
+
+frontend 側の API URL を修正しただけでは反映されません。
+
+Vite は build 時に env を埋め込むため、次の手順が必要です。
+
+```bash
+cd frontend
+npm run build
+aws s3 sync dist s3://<YOUR_BUCKET_NAME> --delete
+aws cloudfront create-invalidation --distribution-id <DISTRIBUTION_ID> --paths "/*"
+```
+
+CloudFront invalidation を入れないと、古い build が返ることがあります。
+## 15. 今後の理想形
 
 将来的には次のような形に寄せるのが自然です。
 
@@ -298,6 +375,8 @@ https://<CLOUDFRONT_DOMAIN>
 4. CloudFront は外部公開の入口
 5. S3 bucket は public にせず、CloudFront OAC で守る
 6. backend CORS の許可 origin は CloudFront の domain に合わせる必要がある
+7. HTTPS frontend からは HTTPS API を呼ぶ必要がある
+8. 独自ドメイン + ACM + ALB の組み合わせで API を HTTPS 化できる
 
 ## 次のステップ
 
