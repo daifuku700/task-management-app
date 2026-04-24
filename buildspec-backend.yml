@@ -10,7 +10,7 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - ACCOUNT_ID=${aws sts get-caller-identity --query Account --output text}
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
       - ECR_URI=$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
       - IMAGE_TAG=$CODEBUILD_RESOLVED_SOURCE_VERSION
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
