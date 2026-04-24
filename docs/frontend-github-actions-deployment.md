@@ -213,6 +213,8 @@ workflow を push したら GitHub の `Actions` タブで確認します。
 - 画面が更新されているか確認
 - backend API と通信できるか確認
 
+今回の学習では、frontend workflow も実際に成功し、GitHub Actions から S3 + CloudFront への自動デプロイができるところまで確認できています。
+
 ## 8. 詰まりやすいポイント
 
 ### `VITE_API_BASE_URL` が反映されない

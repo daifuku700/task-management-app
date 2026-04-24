@@ -269,6 +269,8 @@ AWS 側では:
 - ECS service に新しい deployment が出る
 - ALB 経由の API が動く
 
+今回の学習では、backend workflow は実際に成功し、GitHub Actions から backend の自動デプロイができるところまで確認できています。
+
 ## 9. ここまでで理解したいこと
 
 1. GitHub Actions は push を起点に自動化できる
