@@ -8,6 +8,8 @@
 
 ここでは、いきなり blue/green には進みません。
 
+このプロジェクトでは、CodeBuild で backend image を build し、ECS standard deployment を使って rolling update を観察する形で進めています。
+
 ## まず押さえること
 
 rolling update では、ECS service が古い task を少しずつ新しい task に置き換えます。
@@ -46,6 +48,8 @@ old task old task
 - task definition の意味が分かる
 - ECR repository がある
 - GitHub Actions で backend deploy が一度成功している
+
+加えて、CodePipeline 側で build / deploy の流れが作れている前提です。
 
 ## 学習のゴール
 
@@ -98,6 +102,8 @@ backend の Build stage では、実質的に次を行います。
 - backend image を build する
 - ECR に push する
 
+このプロジェクトでは、Docker Hub の rate limit を避けるため、backend Dockerfile を `ghcr.io/astral-sh/uv:python3.12-trixie-slim` ベースにしています。
+
 つまり、GitHub Actions の backend workflow で今やっていることのうち、
 
 - checkout
@@ -129,6 +135,17 @@ Source
 ```
 
 この段階では、frontend は触らなくて構いません。
+
+### 6. buildspec と Dockerfile の役割を分ける
+
+この学習では、`buildspec-backend.yml` が build の手順を、`backend/dockerfile` が image の中身を担当します。
+
+- buildspec
+  - CodeBuild が何を実行するか
+- Dockerfile
+  - backend image をどう作るか
+
+この分離を意識すると、Build stage の失敗原因を切り分けやすくなります。
 
 ## rolling update を観察するときに見る場所
 
@@ -178,6 +195,8 @@ ECS service の deploy を見るときは、次を意識します。
 - test listener
 - canary / linear traffic shifting
 
+今の段階では、rolling update の仕組みを観察できれば十分です。
+
 これらは blue/green の段階で学びます。
 
 ## この段階で自分に確認したいこと
@@ -199,5 +218,7 @@ ECS service の deploy を見るときは、次を意識します。
 2. CodeBuild project を作る
 3. ECS service を Deploy stage につなぐ
 4. backend の新しい deploy が rolling update されるのを確認する
+
+その後、blue/green deploy を学ぶと理解しやすくなります。
 
 その後に、blue/green deploy を学ぶと理解しやすくなります。

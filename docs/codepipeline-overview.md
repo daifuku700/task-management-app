@@ -14,6 +14,8 @@
 
 次の学習テーマは、GitHub Actions を置き換えることではなく、**AWS ネイティブなパイプラインの考え方を理解すること**です。
 
+このプロジェクトでは、backend を題材に CodePipeline を作り、CodeBuild で image を build して ECS service を更新するところまで進めました。最初の目標は rolling update を観察することです。
+
 ## GitHub Actions と CodePipeline の違い
 
 ### GitHub Actions
@@ -137,6 +139,24 @@ Source
 3. Deploy
    ECS service を更新する
 
+## 今回の backend pipeline の実装方針
+
+このプロジェクトでは、次の構成で学習を進めています。
+
+- Source stage
+  GitHub repository の `main` branch を使う
+- Build stage
+  CodeBuild で `buildspec-backend.yml` を実行し、backend image を build して ECR に push する
+- Deploy stage
+  ECS standard deployment を使い、`imagedefinitions.json` を元に ECS service を更新する
+
+### 実装で詰まった点と解決
+
+- CodeBuild project の console で `CodePipeline` source / artifact を直接選べないケースがあった
+- そのため、CodePipeline 側から Build stage を作る方針に切り替えた
+- Docker Hub の `python:3.12-slim` が rate limit にかかったため、backend Dockerfile を `ghcr.io/astral-sh/uv:python3.12-trixie-slim` ベースに寄せた
+- これにより CodeBuild でも backend image を安定して build できた
+
 ## 学習として何を確認できればよいか
 
 次の 4 つが説明できれば、CodePipeline の第一段階は十分です。
@@ -145,6 +165,8 @@ Source
 2. CodeBuild は build 実行担当である
 3. ECS standard deployment は rolling update で進む
 4. blue/green をやるなら CodeDeploy が関わる
+
+実際の学習では、CodeBuild role を先に作り、CodePipeline role は pipeline 作成時に自動作成させる形が分かりやすかった。
 
 ## 次のドキュメント
 
