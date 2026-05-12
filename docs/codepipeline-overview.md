@@ -87,6 +87,8 @@ deploy の進め方を高度に制御する担当です。
 
 特に ECS の **blue/green deployment** で重要になります。
 
+rolling update では CodePipeline の Deploy stage に `Amazon ECS` を使いました。blue/green では Deploy stage に `AWS CodeDeploy` を使い、CodeDeploy application / deployment group / AppSpec file を使って traffic shifting を管理します。
+
 ## 先に理解すべき deploy 戦略
 
 ### rolling update
@@ -173,3 +175,4 @@ Source
 実際の学習手順は次を参照してください。
 
 - [rolling update の学習手順](/Users/dai/code/task-management-app/docs/rolling-update-learning.md:1)
+- [blue/green deploy の学習手順](/Users/dai/code/task-management-app/docs/blue-green-deployment-learning.md:1)

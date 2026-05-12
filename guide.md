@@ -357,6 +357,7 @@ frontend はコンテナで配るのではなく、静的ファイルとして�
 - [CI/CD の到達点まとめ](/Users/dai/code/task-management-app/docs/cicd-overview.md:1)
 - [CodePipeline の考え方と次の学習テーマ](/Users/dai/code/task-management-app/docs/codepipeline-overview.md:1)
 - [rolling update の学習手順](/Users/dai/code/task-management-app/docs/rolling-update-learning.md:1)
+- [blue/green deploy の学習手順](/Users/dai/code/task-management-app/docs/blue-green-deployment-learning.md:1)
 
 ### 現在地の補足
 
@@ -364,4 +365,22 @@ frontend はコンテナで配るのではなく、静的ファイルとして�
 
 さらに、backend を題材に CodePipeline を作成し、CodeBuild から ECR へ image を push し、ECS service を更新するところまで進めている。
 
-その結果として、rolling update の挙動を確認する段階に入っている。
+その結果として、rolling update の挙動を確認できている。
+
+さらに、CodeDeploy を使った ECS blue/green deploy の学習に入り、2 つの target group、production listener、test listener、ECS service と target group の関連、health check、listener rule の前提条件を確認した。
+
+ただし、CodeDeploy console が AWS account plan の制限で利用できなかったため、CodeDeploy による完全な blue/green deployment はここでは完了扱いにしない。
+
+現時点では、blue/green の仕組み理解は一定進んだものとして、次は **9. Terraform 化する** に進む。
+
+Terraform では、これまで AWS コンソールで手作業した次の構成をコード化する。
+
+- VPC / subnet / route table / internet gateway / NAT gateway
+- security group
+- ALB / listener / target group
+- ECR
+- ECS cluster / task definition / service
+- S3 / CloudFront
+- IAM role / policy
+
+最初からすべてを Terraform 化するのではなく、まずはネットワークだけ、次に ALB、次に ECS、最後に frontend 配信という順番で進める。

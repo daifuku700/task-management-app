@@ -221,4 +221,8 @@ ECS service の deploy を見るときは、次を意識します。
 
 その後、blue/green deploy を学ぶと理解しやすくなります。
 
+次に進む場合は、次のドキュメントを参照してください。
+
+- [blue/green deploy の学習手順](/Users/dai/code/task-management-app/docs/blue-green-deployment-learning.md:1)
+
 その後に、blue/green deploy を学ぶと理解しやすくなります。

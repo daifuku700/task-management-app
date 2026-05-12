@@ -128,6 +128,8 @@ GitHub Actions による自動デプロイはできていますが、学習フ�
 
 rolling update については、CodePipeline の Deploy stage から ECS service を更新し、その結果として task が少しずつ置き換わる流れを観察できる。
 
+blue/green deploy では、CodeDeploy、2 つの target group、production listener、AppSpec file を使って、新旧 task set の traffic を切り替える流れを学ぶ。
+
 ### 3. Terraform
 
 最後に、ここまで手で作ったものを Terraform でコード化する段階があります。
@@ -162,3 +164,4 @@ rolling update については、CodePipeline の Deploy stage から ECS servic
 
 - [CodePipeline の考え方と次の学習テーマ](/Users/dai/code/task-management-app/docs/codepipeline-overview.md:1)
 - [rolling update の学習手順](/Users/dai/code/task-management-app/docs/rolling-update-learning.md:1)
+- [blue/green deploy の学習手順](/Users/dai/code/task-management-app/docs/blue-green-deployment-learning.md:1)
