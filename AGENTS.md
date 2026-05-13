@@ -1,26 +1,29 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-This repository is currently in an initial scaffold state. At the time of writing, only repository-local tool metadata exists under `.serena/`, and no application source, tests, or asset directories have been committed yet.
+This repository contains a task management application with separate backend, frontend, and infrastructure code.
 
-When implementation starts, keep the layout predictable:
-- `src/`: application code
-- `tests/`: automated tests mirroring `src/`
+- `backend/`: FastAPI backend code, Python packaging files, and its Dockerfile
+- `frontend/`: Vite/React frontend code, npm packaging files, and its Dockerfile
+- `terraform/`: AWS infrastructure definitions for the backend deployment
 - `docs/`: design notes and operational documents
-- `assets/`: static files such as images or sample data
+- `compose.yml`: local multi-container application entrypoint
 
 Prefer small, focused modules and group code by feature rather than by file type when the project grows.
 
 ## Build, Test, and Development Commands
-No build or test toolchain is configured yet. Until one is added, keep contributor workflows simple and explicit:
+Useful repository inspection commands:
 - `git status`: confirm the working tree before and after edits
 - `rg --files`: inspect repository contents quickly
 - `find . -maxdepth 2 -type f`: verify newly added files
 
-Once a runtime stack is chosen, document the canonical local commands here, for example:
-- `npm install && npm test`
-- `uv sync && uv run pytest`
-- `make dev`
+Known project commands:
+- `docker compose -f compose.yml up --build`: run the local application stack
+- `uv run pytest`: run backend tests when tests are added
+- `npm install --prefix frontend`: install frontend dependencies
+- `npm run build --prefix frontend`: build the frontend
+- `terraform -chdir=terraform plan`: preview the default real AWS infrastructure
+- `terraform -chdir=terraform plan -var deployment_target=floci -var aws_region=us-east-1`: preview the Floci-targeted infrastructure
 
 Do not introduce multiple parallel ways to run the same task unless there is a clear reason.
 

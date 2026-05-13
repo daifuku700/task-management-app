@@ -1,3 +1,7 @@
+locals {
+  create_nat_gateway = var.deployment_target == "aws" && var.enable_nat_gateway
+}
+
 resource "aws_vpc" "main" {
   cidr_block           = "10.10.0.0/16"
   enable_dns_support   = true
@@ -100,6 +104,8 @@ resource "aws_route_table_association" "private_1c" {
 }
 
 resource "aws_eip" "nat" {
+  count = local.create_nat_gateway ? 1 : 0
+
   domain = "vpc"
 
   tags = {
@@ -108,7 +114,9 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "main" {
-  allocation_id = aws_eip.nat.id
+  count = local.create_nat_gateway ? 1 : 0
+
+  allocation_id = aws_eip.nat[0].id
   subnet_id     = aws_subnet.public_1a.id
 
   tags = {
@@ -121,7 +129,9 @@ resource "aws_nat_gateway" "main" {
 }
 
 resource "aws_route" "private_to_nat" {
+  count = local.create_nat_gateway ? 1 : 0
+
   route_table_id         = aws_route_table.private.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.main.id
+  nat_gateway_id         = aws_nat_gateway.main[0].id
 }
