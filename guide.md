@@ -358,6 +358,10 @@ frontend はコンテナで配るのではなく、静的ファイルとして�
 - [CodePipeline の考え方と次の学習テーマ](/Users/dai/code/task-management-app/docs/codepipeline-overview.md:1)
 - [rolling update の学習手順](/Users/dai/code/task-management-app/docs/rolling-update-learning.md:1)
 - [blue/green deploy の学習手順](/Users/dai/code/task-management-app/docs/blue-green-deployment-learning.md:1)
+- [Terraform 学習の全体像](/Users/dai/code/task-management-app/docs/terraform-overview.md:1)
+- [Terraform network 構成](/Users/dai/code/task-management-app/docs/terraform-network.md:1)
+- [Terraform backend / ECS 構成](/Users/dai/code/task-management-app/docs/terraform-backend-ecs.md:1)
+- [Terraform troubleshooting](/Users/dai/code/task-management-app/docs/terraform-troubleshooting.md:1)
 
 ### 現在地の補足
 
@@ -384,3 +388,7 @@ Terraform では、これまで AWS コンソールで手作業した次の構�
 - IAM role / policy
 
 最初からすべてを Terraform 化するのではなく、まずはネットワークだけ、次に ALB、次に ECS、最後に frontend 配信という順番で進める。
+
+Terraform 学習では、VPC / subnet / route table / security group / ALB / ECR / ECS / NAT Gateway をコード化し、`main.tf` が大きくなった段階で責務ごとにファイル分割した。
+
+また、AWS credential の期限切れ、provider plugin の validate エラー、ECR repository が空でないため `terraform destroy` に失敗するケースも確認した。

@@ -65,3 +65,15 @@ output "nat_gateway_id" {
 output "nat_eip_public_ip" {
   value = aws_eip.nat.public_ip
 }
+
+output "frontend_bucket_name" {
+  value = aws_s3_bucket.frontend.bucket
+}
+
+output "frontend_bucket_regional_domain_name" {
+  value = aws_s3_bucket.frontend.bucket_regional_domain_name
+}
+
+output "frontend_cloudfront_domain_name" {
+  value = aws_cloudfront_distribution.frontend.domain_name
+}
